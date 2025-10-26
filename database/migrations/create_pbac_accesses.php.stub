@@ -17,7 +17,7 @@ return new class extends Migration
                 ->constrained()
                 ->onDelete('cascade');
 
-            $table->unsignedBigInteger('target_id')
+            $table->string('target_id', 36)
                 ->nullable();
 
             $table->foreignIdFor(\Pbac\Models\PBACAccessResource::class, 'pbac_access_resource_id')
@@ -25,15 +25,14 @@ return new class extends Migration
                 ->constrained()
                 ->onDelete('cascade');
 
-            $table
-                ->unsignedBigInteger('resource_id')
-                ->nullable(); //  Null if rule applies to *any* resource of that type...
+            $table->string('resource_id', 36)
+                ->nullable();
 
             $table->json('action')
-                ->nullable();  // e.g., 'view', 'create', 'update', 'delete', 'manage', etc.
+                ->nullable();
             $table->enum('effect', ['allow', 'deny'])
-                ->default('allow'); // 'allow' or 'deny'
-            $table->json('extras')->nullable(); // JSON object for some other data
+                ->default('allow');
+            $table->json('extras')->nullable();
             $table->integer('priority')->default(0); // Higher priority rules evaluated first (useful for deny overrides)
             $table->timestamps();
 

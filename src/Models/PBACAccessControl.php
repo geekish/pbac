@@ -21,10 +21,8 @@ class PBACAccessControl extends Model
     ];
 
     protected $casts = [
-        'action' => 'array', // json
-        'extras' => 'array', // json
-        'target_id' => 'integer',
-        'resource_id' => 'integer',
+        'action' => 'array',
+        'extras' => 'array',
     ];
 
     public function targetType()
