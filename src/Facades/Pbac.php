@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Facade;
  *
  * @method static bool can(\Illuminate\Foundation\Auth\User $user, string $action, \Illuminate\Database\Eloquent\Model|string|null $resource = null, array|object|null $context = null)
  * @method static bool cannot(\Illuminate\Foundation\Auth\User $user, string $action, \Illuminate\Database\Eloquent\Model|string|null $resource = null, array|object|null $context = null)
- * @method static \Pbac\Models\PBACAccessControl allow()
- * @method static \Pbac\Models\PBACAccessControl deny()
+ * @method static \Pbac\Support\RuleBuilder allow()
+ * @method static \Pbac\Support\RuleBuilder deny()
  * @method static array getRulesFor(\Illuminate\Foundation\Auth\User $user, string|null $action = null, string|null $resource = null)
  * @method static array getUserGroups(\Illuminate\Foundation\Auth\User $user)
  * @method static array getUserTeams(\Illuminate\Foundation\Auth\User $user)
