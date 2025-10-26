@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Pbac\Contracts\ConditionHandlerInterface;
+use Pbac\Events\AccessDenied;
+use Pbac\Events\AccessGranted;
+use Pbac\Events\PolicyEvaluated;
 use Pbac\Models\PBACAccessControl;
 use Pbac\Models\PBACAccessTarget;
 use Pbac\Models\PBACAccessResource;
@@ -39,6 +42,8 @@ class PolicyEvaluator
      */
     public function evaluate(\Illuminate\Foundation\Auth\User $user, string $action, Model|string|null $resource = null, array|object|null $context = null): bool
     {
+        $startTime = microtime(true);
+
         // 1. Validate User Model
         if (!$this->validateUser($user)) {
             return false;
@@ -85,7 +90,15 @@ class PolicyEvaluator
         $matchingRules = $this->queryMatchingRules($action, $resourceTypeId, $resourceId, $targetTypeEntries, $targetsByType);
 
         // 7. Evaluate Rules, now passing the context
-        return $this->evaluateRules($user, $action, $resourceTypeString, $resourceId, $matchingRules, $context);
+        $granted = $this->evaluateRules($user, $action, $resourceTypeString, $resourceId, $matchingRules, $context);
+
+        // Calculate evaluation duration
+        $duration = (microtime(true) - $startTime) * 1000; // milliseconds
+
+        // Fire events
+        $this->dispatchEvents($user, $resource, $action, $matchingRules, $granted, $context, $duration);
+
+        return $granted;
     }
 
     /**
@@ -361,6 +374,63 @@ class PolicyEvaluator
 
         // If the loop completes, it means every condition had a registered handler and every handler returned true.
         return true;
+    }
+
+    /**
+     * Dispatch PBAC events.
+     */
+    protected function dispatchEvents(
+        $user,
+        $resource,
+        string $action,
+        Collection $matchingRules,
+        bool $granted,
+        $context,
+        float $duration
+    ): void {
+        if (!Config::get('pbac.events.enabled', true)) {
+            return;
+        }
+        $policy = $matchingRules->first();
+
+        $reason = $granted
+            ? ($policy ? "Granted by policy #{$policy->id}" : "No matching policy")
+            : "Access denied - no matching allow policy";
+
+        if (Config::get('pbac.events.policy_evaluated', true)) {
+            event(new PolicyEvaluated(
+                $user,
+                $resource,
+                $action,
+                $policy,
+                $granted,
+                $reason,
+                is_array($context) ? $context : [],
+                $duration
+            ));
+        }
+
+        if ($granted) {
+            if (Config::get('pbac.events.access_granted', true)) {
+                event(new AccessGranted(
+                    $user,
+                    $resource,
+                    $action,
+                    $policy,
+                    is_array($context) ? $context : []
+                ));
+            }
+        } else {
+            if (Config::get('pbac.events.access_denied', true)) {
+                event(new AccessDenied(
+                    $user,
+                    $resource,
+                    $action,
+                    $reason,
+                    is_array($context) ? $context : []
+                ));
+            }
+        }
     }
 }
 

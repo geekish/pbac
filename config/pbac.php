@@ -95,6 +95,32 @@ return [
         'enabled' => env('PBAC_LOGGING_ENABLED', true),
         'channel' => env('PBAC_LOGGING_CHANNEL', 'stderr'), // Log channel to use (null for default)
         'level'   => env('LOG_LEVEL', 'warning'), // Add this line
-    ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Events Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configure which PBAC events should be fired. These events allow you to
+    | track policy evaluations, access decisions, and policy CRUD operations.
+    | You can listen to these events to create audit logs, analytics,
+    | visualizations, or security monitoring.
+    |
+    */
+    'events' => [
+        'enabled' => env('PBAC_EVENTS_ENABLED', true), // Master switch for all PBAC events
+
+        // Policy evaluation events
+        'policy_evaluated' => env('PBAC_EVENT_POLICY_EVALUATED', true), // Fires on every policy evaluation with timing and context
+        'access_granted' => env('PBAC_EVENT_ACCESS_GRANTED', true),     // Fires when access is granted
+        'access_denied' => env('PBAC_EVENT_ACCESS_DENIED', true),       // Fires when access is denied
+        'policy_fetched' => env('PBAC_EVENT_POLICY_FETCHED', true),     // Fires when policies are fetched for a user
+
+        // Policy CRUD events
+        'policy_created' => env('PBAC_EVENT_POLICY_CREATED', true),     // Fires when a policy is created
+        'policy_updated' => env('PBAC_EVENT_POLICY_UPDATED', true),     // Fires when a policy is updated
+        'policy_deleted' => env('PBAC_EVENT_POLICY_DELETED', true),     // Fires when a policy is deleted
+    ],
 
 ];

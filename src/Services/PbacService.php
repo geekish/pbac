@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Pbac\Events\PolicyFetched;
 use Pbac\Models\PBACAccessControl;
 use Pbac\Models\PBACAccessGroup;
 use Pbac\Models\PBACAccessTeam;
@@ -132,7 +133,14 @@ class PbacService
             }
         }
 
-        return $query->with(['targetType', 'resourceType'])->get()->toArray();
+        $policies = $query->with(['targetType', 'resourceType'])->get()->toArray();
+
+        // Dispatch PolicyFetched event
+        if (Config::get('pbac.events.enabled', true) && Config::get('pbac.events.policy_fetched', true)) {
+            event(new PolicyFetched($user, $policies, $resource, $action));
+        }
+
+        return $policies;
     }
 
     /**

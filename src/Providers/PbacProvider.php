@@ -4,6 +4,8 @@ namespace Pbac\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
+use Pbac\Models\PBACAccessControl;
+use Pbac\Observers\PBACAccessControlObserver;
 use Pbac\Services\PolicyEvaluator;
 use Pbac\Support\PbacLogger;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -36,6 +38,9 @@ class PbacProvider extends PackageServiceProvider {
 
     public function packageBooted()
     {
+        // Register PBAC model observers
+        $this->registerObservers();
+
         // The Gate::before check for PBAC integration.
         // This integrates PBAC with Laravel's Gate system.
         Gate::before(function ($user, $ability, $arguments) {
@@ -67,6 +72,16 @@ class PbacProvider extends PackageServiceProvider {
         Blade::directive('endpbacCan', function () {
             return "<?php endif; ?>";
         });
+    }
+
+    /**
+     * Register model observers for PBAC events.
+     */
+    protected function registerObservers(): void
+    {
+        if (config('pbac.events.enabled', true)) {
+            PBACAccessControl::observe(PBACAccessControlObserver::class);
+        }
     }
 
     public function packageRegistered()
