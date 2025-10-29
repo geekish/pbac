@@ -5,17 +5,22 @@ namespace Pbac\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo; // If you have an owner
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Pbac\Traits\HasUUIDColumn;
+
+// If you have an owner
 
 class PBACAccessTeam extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUUIDColumn;
 
     protected $table = 'pbac_access_teams';
 
     protected $fillable = [
         'name',
         'description',
+        'is_active',
+        'uuid',
         'owner_id'
     ];
 

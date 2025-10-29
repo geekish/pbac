@@ -5,15 +5,18 @@ namespace Pbac\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Pbac\Traits\HasUUIDColumn;
 
 class PBACAccessGroup extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUUIDColumn;
     protected $table = 'pbac_access_groups';
 
     protected $fillable = [
         'name',
         'description',
+        'is_active',
+        'uuid',
     ];
 
     public function users(): BelongsToMany
