@@ -9,7 +9,7 @@ trait HasUUIDColumn {
 
     use HasUuids;
     public $uuid = true;
-    public $fieldName = 'uuid';
+    public $fieldName = 'identifier';
 
     public function getIncrementing(): bool
     {

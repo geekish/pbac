@@ -20,7 +20,7 @@ class PBACAccessTeam extends Model
         'name',
         'description',
         'is_active',
-        'uuid',
+        'identifier',
         'owner_id'
     ];
 

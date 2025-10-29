@@ -16,7 +16,7 @@ class PBACAccessGroup extends Model
         'name',
         'description',
         'is_active',
-        'uuid',
+        'identifier',
     ];
 
     public function users(): BelongsToMany
