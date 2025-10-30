@@ -7,6 +7,7 @@ use Pbac\Models\PBACAccessControl;
 use Pbac\Models\PBACAccessResource;
 use Pbac\Models\PBACAccessTarget;
 use Pbac\Services\PolicyEvaluator;
+use Pbac\Support\RuleBuilder;
 use Pbac\Tests\Support\Models\DummyPost;
 use Pbac\Tests\Support\Models\TestUser;
 use Pbac\Tests\TestCase;
@@ -80,8 +81,9 @@ class PolicyEvaluatorConditionsTest extends TestCase
         $user = TestUser::factory()->create();
         $post = DummyPost::create(['title' => 'Level Test Post']);
 
-        PBACAccessControl::factory()
-            ->allow()
+        // PBACAccessControl::factory()
+        // ->allow()
+        RuleBuilder::allow()
             ->forUser($user)
             ->forResource(DummyPost::class, $post->id)
             ->withAction('view')

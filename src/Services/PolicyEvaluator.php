@@ -5,16 +5,16 @@ namespace Pbac\Services;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 use Pbac\Contracts\ConditionHandlerInterface;
-use Pbac\Events\AccessDenied;
-use Pbac\Events\AccessGranted;
-use Pbac\Events\PolicyEvaluated;
+use Pbac\Events\Access\AccessDenied;
+use Pbac\Events\Access\AccessGranted;
+use Pbac\Events\Policy\PolicyEvaluated;
 use Pbac\Models\PBACAccessControl;
-use Pbac\Models\PBACAccessTarget;
 use Pbac\Models\PBACAccessResource;
+use Pbac\Models\PBACAccessTarget;
 use Pbac\Support\PbacLogger;
 use Pbac\Traits\HasPbacAccessControl;
-use Illuminate\Support\Str;
 
 class PolicyEvaluator
 {

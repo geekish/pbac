@@ -1,21 +1,20 @@
 <?php
 
-namespace Pbac\Events;
+namespace Pbac\Events\Access;
 
-class AccessDenied
+use Pbac\Events\BasePBACLogEvent;
+
+class AccessDenied extends BasePBACLogEvent
 {
 
     public function __construct(
-        public $user,
+        public ?\Illuminate\Foundation\Auth\User $user,
         public $resource,
         public string $action,
         public ?string $reason = null,
         public array $context = []
-    ) {}
-
-    public function getUserId(): ?int
-    {
-        return $this->user?->id ?? $this->user['id'] ?? null;
+    ) {
+        parent::__construct($user);
     }
 
     public function getResourceType(): ?string
@@ -23,16 +22,11 @@ class AccessDenied
         if (is_object($this->resource)) {
             return get_class($this->resource);
         }
-
-        return $this->resource['type'] ?? null;
+        return $this->getObjectId($this->resource, 'type', true) ?? null;
     }
 
     public function getResourceId()
     {
-        if (is_object($this->resource)) {
-            return $this->resource->id ?? null;
-        }
-
-        return $this->resource['id'] ?? null;
+        $this->getObjectId($this->resource, 'id');
     }
 }

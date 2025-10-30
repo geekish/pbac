@@ -5,7 +5,15 @@ namespace Pbac\Providers;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Pbac\Models\PBACAccessControl;
+use Pbac\Models\PBACAccessGroup;
+use Pbac\Models\PBACAccessResource;
+use Pbac\Models\PBACAccessTarget;
+use Pbac\Models\PBACAccessTeam;
 use Pbac\Observers\PBACAccessControlObserver;
+use Pbac\Observers\PBACAccessGroupObserver;
+use Pbac\Observers\PBACAccessResourceObserver;
+use Pbac\Observers\PBACAccessTargetObserver;
+use Pbac\Observers\PBACAccessTeamObserver;
 use Pbac\Services\PbacUtility;
 use Pbac\Services\PolicyEvaluator;
 use Pbac\Support\PbacLogger;
@@ -82,6 +90,10 @@ class PbacProvider extends PackageServiceProvider {
     {
         if (config('pbac.events.enabled', true)) {
             PBACAccessControl::observe(PBACAccessControlObserver::class);
+            PBACAccessTeam::observe(PBACAccessTeamObserver::class);
+            PBACAccessGroup::observe(PBACAccessGroupObserver::class);
+            PBACAccessResource::observe(PBACAccessResourceObserver::class);
+            PBACAccessTarget::observe(PBACAccessTargetObserver::class);
         }
     }
 

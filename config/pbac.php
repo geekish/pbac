@@ -128,6 +128,26 @@ return [
         'policy_created' => env('PBAC_EVENT_POLICY_CREATED', true),     // Fires when a policy is created
         'policy_updated' => env('PBAC_EVENT_POLICY_UPDATED', true),     // Fires when a policy is updated
         'policy_deleted' => env('PBAC_EVENT_POLICY_DELETED', true),     // Fires when a policy is deleted
+
+        // Team CRUD events
+        'team_created' => env('PBAC_EVENT_TEAM_CREATED', true),         // Fires when a team is created
+        'team_updated' => env('PBAC_EVENT_TEAM_UPDATED', true),         // Fires when a team is updated
+        'team_deleted' => env('PBAC_EVENT_TEAM_DELETED', true),         // Fires when a team is deleted
+
+        // Group CRUD events
+        'group_created' => env('PBAC_EVENT_GROUP_CREATED', true),       // Fires when a group is created
+        'group_updated' => env('PBAC_EVENT_GROUP_UPDATED', true),       // Fires when a group is updated
+        'group_deleted' => env('PBAC_EVENT_GROUP_DELETED', true),       // Fires when a group is deleted
+
+        // Resource CRUD events
+        'resource_created' => env('PBAC_EVENT_RESOURCE_CREATED', true), // Fires when a resource is created
+        'resource_updated' => env('PBAC_EVENT_RESOURCE_UPDATED', true), // Fires when a resource is updated
+        'resource_deleted' => env('PBAC_EVENT_RESOURCE_DELETED', true), // Fires when a resource is deleted
+
+        // Target CRUD events
+        'target_created' => env('PBAC_EVENT_TARGET_CREATED', true),     // Fires when a target is created
+        'target_updated' => env('PBAC_EVENT_TARGET_UPDATED', true),     // Fires when a target is updated
+        'target_deleted' => env('PBAC_EVENT_TARGET_DELETED', true),     // Fires when a target is deleted
     ],
 
 ];

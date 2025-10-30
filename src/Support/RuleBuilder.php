@@ -39,6 +39,16 @@ class RuleBuilder
         $this->effect = $effect;
     }
 
+    public static function allow(): self
+    {
+        return new self('allow');
+    }
+
+    public static function deny(): self
+    {
+        return new self('deny');
+    }
+
     /**
      * Set the target to a specific user.
      *

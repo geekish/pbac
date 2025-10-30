@@ -4,9 +4,9 @@ namespace Pbac\Observers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Pbac\Events\PolicyCreated;
-use Pbac\Events\PolicyDeleted;
-use Pbac\Events\PolicyUpdated;
+use Pbac\Events\Policy\PolicyCreated;
+use Pbac\Events\Policy\PolicyDeleted;
+use Pbac\Events\Policy\PolicyUpdated;
 use Pbac\Models\PBACAccessControl;
 
 class PBACAccessControlObserver
@@ -54,6 +54,6 @@ class PBACAccessControlObserver
             return;
         }
 
-        event(new PolicyDeleted($policy, Auth::user()));
+        event(new PolicyDeleted($policy, $policy->getOriginal(), Auth::user()));
     }
 }

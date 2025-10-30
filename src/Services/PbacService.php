@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
-use Pbac\Events\PolicyFetched;
+use Pbac\Events\Policy\PolicyFetched;
 use Pbac\Models\PBACAccessControl;
 use Pbac\Models\PBACAccessGroup;
-use Pbac\Models\PBACAccessTeam;
 use Pbac\Models\PBACAccessResource;
 use Pbac\Models\PBACAccessTarget;
+use Pbac\Models\PBACAccessTeam;
 
 /**
  * PBAC Service
