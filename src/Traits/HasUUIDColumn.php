@@ -7,25 +7,21 @@ use Illuminate\Support\Str;
 
 trait HasUUIDColumn {
 
-    use HasUuids;
-    // public $uuid = false;
-    public $fieldName = 'identifier';
-
-    // public function getIncrementing(): bool
-    // {
-    //     return true;
-    // }
-
-    public static function boot() {
-        parent::boot();
-        static::creating(function ($model) {
-            // $model->uuid = self::newUUID7();
-            $model->{$model->fieldName} = self::newUUID7ForColumn();
-        });
-    }
+    protected string $uuidColumn = 'identifier';
 
     public static function newUUID7ForColumn()
     {
         return (string) Str::uuid7();
+    }
+
+
+    public static function bootHasUUIDColumn(): void
+    {
+        static::creating(function ($model) {
+            $column = property_exists($model, 'uuidColumn') ? $model->uuidColumn : 'identifier';
+            if (empty($model->{$column})) {
+                $model->{$column} = self::newUUID7ForColumn(); // or Str::uuid7() if you're on Laravel 11.36+
+            }
+        });
     }
 }
