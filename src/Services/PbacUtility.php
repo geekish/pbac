@@ -73,7 +73,7 @@ class PbacUtility
               ->when($onDelete === 'cascade', fn ($c) => $c->cascadeOnDelete())
               ->when($onDelete === 'set null', fn ($c) => $c->nullOnDelete());
 
-        $table->index($column);
+        // $table->index($column);
 
         return $col;
     }
