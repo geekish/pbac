@@ -8,13 +8,13 @@ use Illuminate\Support\Str;
 trait HasUUIDColumn {
 
     use HasUuids;
-    public $uuid = true;
+    // public $uuid = false;
     public $fieldName = 'identifier';
 
-    public function getIncrementing(): bool
-    {
-        return false;
-    }
+    // public function getIncrementing(): bool
+    // {
+    //     return true;
+    // }
 
     public static function boot() {
         parent::boot();
