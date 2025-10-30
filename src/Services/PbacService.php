@@ -4,8 +4,11 @@ namespace Pbac\Services;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Pbac\Events\Impersonation\ImpersonationStarted;
+use Pbac\Events\Impersonation\ImpersonationStopped;
 use Pbac\Events\Policy\PolicyFetched;
 use Pbac\Models\PBACAccessControl;
 use Pbac\Models\PBACAccessGroup;
@@ -446,6 +449,11 @@ class PbacService
 
         $guard = config('pbac-ui.impersonation.guard', null);
         auth()->guard($guard)->login($target);
+
+        // Dispatch impersonation started event
+        if (Config::get('pbac.events.enabled', true) && Config::get('pbac.events.impersonation_started', true)) {
+            event(new ImpersonationStarted($impersonator, $target));
+        }
     }
 
     /**
@@ -462,9 +470,21 @@ class PbacService
             $userModel = config('auth.providers.users.model', \App\Models\User::class);
             $originalUser = $userModel::find($impersonatorId);
 
+            // Capture current target user before switching back
+            $guard = config('pbac-ui.impersonation.guard', null);
+            $targetUser = auth()->guard($guard)->user();
+
             if ($originalUser) {
-                $guard = config('pbac-ui.impersonation.guard', null);
                 auth()->guard($guard)->login($originalUser);
+
+                // Dispatch impersonation stopped event
+                if (Config::get('pbac.events.enabled', true) && Config::get('pbac.events.impersonation_stopped', true)) {
+                    $sessionData = [
+                        'impersonator_id' => $impersonatorId,
+                        'target_id' => $targetUser?->getKey(),
+                    ];
+                    event(new ImpersonationStopped($originalUser, $targetUser, $sessionData));
+                }
             }
         }
     }

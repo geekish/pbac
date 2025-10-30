@@ -148,6 +148,10 @@ return [
         'target_created' => env('PBAC_EVENT_TARGET_CREATED', true),     // Fires when a target is created
         'target_updated' => env('PBAC_EVENT_TARGET_UPDATED', true),     // Fires when a target is updated
         'target_deleted' => env('PBAC_EVENT_TARGET_DELETED', true),     // Fires when a target is deleted
+
+        // Impersonation events
+        'impersonation_started' => env('PBAC_EVENT_IMPERSONATION_STARTED', true), // Fires when impersonation starts
+        'impersonation_stopped' => env('PBAC_EVENT_IMPERSONATION_STOPPED', true), // Fires when impersonation stops
     ],
 
 ];
