@@ -4,11 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
-        Schema::create('pbac_access_groups', function (Blueprint $table) {
+        /** @var \Pbac\Services\PBACUtility $pbacUtility */
+        $pbacUtility = app('pbac-utility');
+        Schema::create('pbac_access_groups', function (Blueprint $table) use ($pbacUtility) {
             $table->id();
             $table->string('name')->unique();
             $table->text('description')->nullable();
@@ -17,17 +18,15 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('pbac_group_user', function (Blueprint $table) {
-            $table->foreignIdFor(\Pbac\Models\PBACAccessGroup::class, 'pbac_access_group_id')
-                ->constrained()
-                ->onDelete('cascade');
-            $table->string('user_id', 36);
+        Schema::create('pbac_group_user', function (Blueprint $table) use ($pbacUtility)  {
+            $table->foreignId('pbac_access_group_id')
+                  ->constrained('pbac_access_groups')
+                  ->cascadeOnDelete();
+            $pbacUtility->addUserForeignKey($table, 'user_id', false, 'cascade');
             $table->primary(['pbac_access_group_id', 'user_id']);
-
             $table->index('user_id');
         });
     }
-
 
     public function down(): void
     {

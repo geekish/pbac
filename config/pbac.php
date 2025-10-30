@@ -4,6 +4,13 @@
 return [
 
     'user_model' => \App\Models\User::class,
+    'users' => [
+        'table'    => 'users',   // override if different
+        'key'      => 'id',      // primary key column name, could be 'id' or 'uuid' etc.
+        'key_type' => 'bigint',  // one of: unsignedBigInteger|bigint|uuid|ulid|string
+        // when key_type=string, also set:
+        'key_length' => 36,   // e.g. 36 for UUID, 26 for ULID, or custom, mainly used for migrations
+    ],
 
     /*
     |--------------------------------------------------------------------------

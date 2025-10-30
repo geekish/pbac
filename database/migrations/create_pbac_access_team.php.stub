@@ -9,28 +9,30 @@ return new class extends Migration
 
     public function up(): void
     {
-        Schema::create('pbac_access_teams', function (Blueprint $table) {
+        /** @var \Pbac\Services\PBACUtility $pbacUtility */
+        $pbacUtility = app('pbac-utility');
+
+        Schema::create('pbac_access_teams', function (Blueprint $table) use ($pbacUtility) {
             $table->id();
             $table->string('name')->unique();
             $table->text('description')->nullable();
             $table->uuid('identifier')->unique()->nullable();
             $table->boolean('is_active')->default(true);
-            $table->string('owner_id', 36)->nullable();
+            $pbacUtility->addUserForeignKey($table, 'owner_id', true, 'set null');
             $table->timestamps();
-
-            $table->index('owner_id');
         });
 
-        Schema::create('pbac_team_user', function (Blueprint $table) {
-            $table->foreignIdFor(\Pbac\Models\PBACAccessTeam::class, 'pbac_team_id')
-                ->constrained()
-                ->onDelete('cascade');
-            $table->string('user_id', 36);
+        Schema::create('pbac_team_user', function (Blueprint $table) use ($pbacUtility) {
+            $table
+                ->foreignId('pbac_team_id')
+                ->constrained('pbac_access_teams')
+                ->cascadeOnDelete();
+            $pbacUtility->addUserForeignKey($table, 'user_id', false, 'cascade');
             $table->primary(['pbac_team_id', 'user_id']);
-
             $table->index('user_id');
         });
     }
+
 
     /**
      * Reverse the migrations.

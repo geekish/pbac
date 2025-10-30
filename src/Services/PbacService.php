@@ -22,7 +22,7 @@ use Pbac\Models\PBACAccessTarget;
  */
 class PbacService
 {
-    public function __construct(public PolicyEvaluator $policyEvaluator)
+    public function __construct(public PolicyEvaluator $policyEvaluator, public PbacUtility $utilityService)
     {
     }
 
@@ -516,5 +516,12 @@ class PbacService
 
         return true;
     }
+
+    public function utils(): PbacUtility
+    {
+        return $this->utilityService;
+    }
+
+
 }
 

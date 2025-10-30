@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Pbac\Models\PBACAccessControl;
 use Pbac\Observers\PBACAccessControlObserver;
+use Pbac\Services\PbacUtility;
 use Pbac\Services\PolicyEvaluator;
 use Pbac\Support\PbacLogger;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -94,15 +95,23 @@ class PbacProvider extends PackageServiceProvider {
             return new PolicyEvaluator();
         });
 
+        $this->app->singleton('pbac-utility', function ($app) {
+            return new PbacUtility();
+        });
+        $this->app->singleton(PbacUtility::class, function ($app) {
+            return $app->make('pbac-utility');
+        });
+
         // Bind PbacService as 'pbac' for facade access
         $this->app->singleton('pbac', function ($app) {
-            return new \Pbac\Services\PbacService($app->make(PolicyEvaluator::class));
+            return new \Pbac\Services\PbacService($app->make(PolicyEvaluator::class), $app->make(PbacUtility::class));
         });
 
         // Also bind the class name for direct injection
         $this->app->singleton(\Pbac\Services\PbacService::class, function ($app) {
             return $app->make('pbac');
         });
+
     }
 
 }
